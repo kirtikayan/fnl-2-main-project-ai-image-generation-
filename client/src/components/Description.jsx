@@ -5,10 +5,8 @@ import { motion } from 'framer-motion';
 const Description = () => {
   return (
     <div
-      className="flex flex-col items-center justify-center p-6 md:px-28 bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 text-white "
-      style={{
-        background: 'linear-gradient(to bottom , #6a1b9a, #f06292, rgba(255, 255, 255, 0))',
-      }}
+      className="flex flex-col items-center justify-center p-6 md:px-28  text-black bg-white "
+      
     >
       {/* Main Heading */}
       <motion.h1
@@ -22,7 +20,7 @@ const Description = () => {
 
       {/* Subheading */}
       <motion.p
-        className="text-white mb-8 text-center max-w-lg mx-auto"
+        className="text-blue-900 mb-8 text-center max-w-lg mx-auto"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5, duration: 1 }}
@@ -56,7 +54,7 @@ const Description = () => {
 
           {/* Description Text */}
           <motion.p
-            className="text-white mb-4"
+            className="text-blue-800 mb-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.2, duration: 1 }}
@@ -66,7 +64,7 @@ const Description = () => {
 
           {/* Additional Info */}
           <motion.p
-            className="text-white mb-5"
+            className="text-blue-800 mb-5"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.4, duration: 1 }}

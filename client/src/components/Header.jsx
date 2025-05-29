@@ -10,7 +10,7 @@ const Header = () => {
 
   const handleClick = () => {
     if (user) {
-      navigate('/Result')
+      navigate('/Result');
     } else {
       setShowLogin(true);
     }
@@ -18,144 +18,155 @@ const Header = () => {
 
   return (
     <motion.div
-    className="flex flex-col justify-center items-center text-center py-24 px-4 md:px-12 bg-gradient-to-r from-red-300 to-yellow-200 text-blue-900"
-    initial={{ opacity: 0, y: 50, scale: 0.95 }}  // Start a bit smaller for a zoom-in effect
-    animate={{ opacity: 1, y: 0, scale: 1 }}  // Scale to normal size
-    transition={{
-      duration: 1.5,  // Longer duration for a smoother transition
-      ease: [0.6, -0.05, 0.01, 0.99],  // Custom cubic-bezier easing for a unique feel
-      type: 'spring',
-      stiffness: 100,
-      damping: 25,  // Slight damping for a more bouncy effect
-    }}
+      className="flex flex-col justify-center items-center text-center py-24 px-4 md:px-12 text-[#2c1d29]"
+      style={{
+        background: 'radial-gradient(circle at center, #f8e1ff 0%, #ffffff 60%)',
+      }}
+      initial={{ opacity: 0, y: 50, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{
+        duration: 1.5,
+        ease: [0.6, -0.05, 0.01, 0.99],
+        type: 'spring',
+        stiffness: 100,
+        damping: 25,
+      }}
     >
-      {/* Logo Section */}
+      {/* Logo */}
       <motion.div
-        className="flex items-center justify-center space-x-4 mb-8"
+        className="mb-10"
         initial={{ opacity: 1 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.2, duration: 1 }} // Delayed and same duration for each element
+        transition={{ delay: 0.2, duration: 1 }}
       >
-        <img src={assets.logo} alt="AI Art Logo" className="w-32 sm:w-40 lg:w-48 object-contain" />
+        <img
+          src={assets.logo}
+          alt="AI Art Logo"
+          className="w-32 sm:w-40 lg:w-48 object-contain"
+        />
       </motion.div>
 
-      {/* Tagline */}
+      {/* Animated Tagline */}
       <motion.div
-      className="bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 px-6 py-2 rounded-full inline-flex items-center space-x-2 text-lg font-semibold shadow-lg"
-      initial={{ opacity: 1 }}
-      whileHover={{
-        x: [0, 10, -10, 10, -10, 0], // Funky horizontal shake
-        y: [0, -5, 0, 5, 0], // Small vertical bounce
-        scale: [1, 1.1, 1, 1.1, 1], // Slight scale-up for a "pulse" effect
-        rotate: [0, 5, -5, 0], // Slight rotation for added funk
-        backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"], // Background color shift
-      }}
-      transition={{
-        duration: 2,
-        repeat: Infinity, // Loop forever while hovering
-        repeatType: 'loop',
-        ease: "easeInOut", // Smooth easing
-      }}
-    >
-      <p>Your Gateway to AI-Generated Art</p>
-      <img src={assets.star_icon} alt="Star Icon" className="w-6 h-6" />
-    </motion.div>
+        className="bg-gradient-to-r from-fuchsia-500 via-pink-500 to-rose-400 px-6 py-2 rounded-full inline-flex items-center space-x-2 text-lg font-semibold text-white"
+        whileHover={{
+          scale: 1.05,
+          rotate: [0, 3, -3, 3, 0],
+        }}
+        transition={{
+          duration: 0.6,
+          ease: 'easeInOut',
+        }}
+      >
+        <p>Your Gateway to AI-Generated Art</p>
+        <img src={assets.star_icon} alt="Star Icon" className="w-6 h-6" />
+      </motion.div>
 
-
-     
-<motion.h1
-      className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mt-12 max-w-3xl mx-auto"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.6, duration: 1 }} // Delayed further
-      style={{
-        fontFamily: "sans-serif", // Default font, no font change
-        backgroundImage: "linear-gradient(90deg, #0d2661, #ff77ff, #00c6ff, #00ff99)",
-        backgroundSize: "400% 400%", // Larger background size for smoother transition
-        backgroundPosition: "0% 50%",
-        color: "transparent", // Text becomes transparent to reveal gradient
-        backgroundClip: "text", // Clip the background gradient to the text
-        WebkitBackgroundClip: "text", // Required for Safari
-        animation: "gradientAnimation 3s ease infinite", // Animate the gradient
-      }}
-    >
-      Transform Your Ideas into Stunning Visual Art in Seconds
-    </motion.h1>
+      {/* Main Heading */}
+      <motion.h1
+        className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mt-12 max-w-3xl mx-auto leading-tight"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6, duration: 1 }}
+        style={{
+          backgroundImage: 'linear-gradient(90deg, #0d2661, #ff77ff, #00c6ff, #00ff99)',
+          backgroundSize: '400% 400%',
+          backgroundPosition: '0% 50%',
+          color: 'transparent',
+          backgroundClip: 'text',
+          WebkitBackgroundClip: 'text',
+          animation: 'gradientAnimation 6s ease infinite',
+        }}
+      >
+        Transform Your Ideas into Stunning Visual Art in Seconds
+      </motion.h1>
 
       {/* Description */}
       <motion.p
-        className="text-lg mt-6 text-blue-900 max-w-xl mx-auto"
+        className="text-lg mt-6 max-w-xl mx-auto text-[#4a3b4e]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.8, duration: 1 }} // Delay increased
+        transition={{ delay: 0.8, duration: 1 }}
       >
-        Harness the power of AI to turn simple words into breathtaking art. It's fast, easy, and fun to watch your imagination come to life with AI.
+        Harness the power of AI to turn simple words into breathtaking art. Fast,
+        intuitive, and mesmerizing — watch your imagination become reality.
       </motion.p>
 
-      {/* Main Button */}
+      {/* Action Button */}
       <motion.button
         onClick={handleClick}
-        className=" flex mt-8 px-8 py-3 bg-gradient-to-r from-pink-600 to-indigo-500 text-white text-lg font-semibold rounded-full shadow-xl transform transition-all hover:scale-105 active:scale-95"
+        className="mt-10 px-8 py-3 bg-gradient-to-r from-pink-600 to-indigo-500 text-white text-lg font-semibold rounded-full hover:scale-105 active:scale-95 transition-all flex items-center"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 1 }} // Delay before the button appears
+        transition={{ delay: 1, duration: 1 }}
       >
         Start Creating
         <img className="h-6 ml-2" src={assets.star_group} alt="Star Group" />
       </motion.button>
 
-      {/* Featured Art Preview with Crazy Hover Animation */}
+      {/* Art Preview */}
       <motion.div
-  className="mt-16 grid grid-cols-3 gap-4 max-w-4xl mx-auto"
-  initial={{ opacity: 0 }}
-  animate={{ opacity: 1 }}
-  transition={{ delay: 1.2, duration: 1 }} // Delay increased here too
->
-  {Array(6).fill('').map((item, index) => (
-    <motion.div
-      key={index}
-      className="relative w-full h-48 cursor-pointer rounded-lg overflow-hidden"
-      whileHover={{
-        scale: 1.2,
-        rotate: 10,
-        x: [0, 20, -20, 0], // Crazy horizontal shake effect
-        y: [0, -10, 10, 0], // Crazy vertical shake effect
-        boxShadow: "0 0 15px 5px rgba(255, 165, 0, 0.7)", // Glowing orange shadow for hover state
-
-
-        transition: { duration: 0.5 },
-      }}
-      // Default box-shadow to none or light shadow when not hovered
-      style={{ boxShadow: "0 0 5px rgba(128, 0, 128, 0.5)" }}
-    >
-      <img
-        src={index % 2 === 0 ? assets.sample_img_2 : assets.sample_img_1}
-        alt={`AI Art ${index}`}
-        className="w-full h-full object-cover rounded-lg"
-      />
-    </motion.div>
-  ))}
-</motion.div>
-
-
+        className="mt-20 grid grid-cols-2 sm:grid-cols-3 gap-6 max-w-5xl mx-auto px-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2, duration: 1 }}
+      >
+        {Array(6)
+          .fill('')
+          .map((_, index) => (
+            <motion.div
+              key={index}
+              className="relative w-full h-48 rounded-lg overflow-hidden border border-purple-200"
+              whileHover={{
+                scale: 1.1,
+                rotate: 5,
+                transition: { duration: 0.4 },
+              }}
+            >
+              <img
+                src={
+                  index % 2 === 0
+                    ? assets.sample_img_2
+                    : assets.sample_img_1
+                }
+                alt={`AI Art ${index}`}
+                className="w-full h-full object-cover"
+              />
+            </motion.div>
+          ))}
+      </motion.div>
 
       {/* Footer Text */}
       <motion.p
-  className="mt-8 text-sm text-blue-900"
-  initial={{ opacity: 0 }}
-  animate={{ opacity: [0, 1, 0] }} // Loop opacity fade-in and fade-out
-  transition={{
-    delay: 1.4,
-    duration: 2, // You can adjust the duration as needed
-    repeat: Infinity, // Make it loop
-    repeatType: 'loop', // Loop the animation continuously
-  }} 
->
-  Powered by cutting-edge AI technology to bring your imagination to life.
-</motion.p>
+        className="mt-12 text-sm text-[#4b3e4f]"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0, 1, 0] }}
+        transition={{
+          delay: 1.4,
+          duration: 2,
+          repeat: Infinity,
+          repeatType: 'loop',
+        }}
+      >
+        Powered by cutting-edge AI to bring your creativity to life.
+      </motion.p>
 
+      {/* Keyframe animation for text gradient */}
+      <style>{`
+        @keyframes gradientAnimation {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+      `}</style>
     </motion.div>
   );
 };

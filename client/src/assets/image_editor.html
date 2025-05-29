@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Imaginify</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+  <!-- Cropper.js CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+  <style>
+    /* Additional styles for crop functionality */
+    .crop-controls {
+      display: none;
+      margin-top: 10px;
+      gap: 10px;
+      align-items: center;
+    }
+    
+    .crop-controls.active {
+      display: flex;
+    }
+    
+    .crop-controls button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+    
+    .crop-controls .apply-crop {
+      background: #007bff;
+      color: white;
+    }
+    
+    .crop-controls .apply-crop:hover {
+      background: #0056b3;
+    }
+    
+    .crop-controls .cancel-crop {
+      background: #6c757d;
+      color: white;
+    }
+    
+    .crop-controls .cancel-crop:hover {
+      background: #545b62;
+    }
+    
+    .crop-button {
+      background: #28a745;
+      color: white;
+      margin-top: 10px;
+    }
+    
+    .crop-button:hover {
+      background: #1e7e34;
+    }
+    
+    .crop-button:disabled {
+      background: #6c757d;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container disable">
+    <img src="logo-text.svg" alt="Imaginify" style="max-width: 200px; height: auto;">
+    <div class="wrapper">
+      <div class="editor-panel">
+        <div class="filter">
+          <label class="title">Filters</label>
+          <div class="options">
+            <button id="brightness" class="active">Brightness</button>
+            <button id="saturation">Saturation</button>
+            <button id="inversion">Inversion</button>
+            <button id="grayscale">Grayscale</button>
+          </div>
+          <div class="slider">
+            <div class="filter-info">
+              <p class="name">Brighteness</p>
+              <p class="value">100%</p>
+            </div>
+            <input type="range" value="100" min="0" max="200">
+          </div>
+        </div>
+        <div class="rotate">
+          <label class="title">Rotate & Flip</label>
+          <div class="options">
+            <button id="left"><i class="fa-solid fa-rotate-left"></i></button>
+            <button id="right"><i class="fa-solid fa-rotate-right"></i></button>
+            <button id="horizontal"><i class='bx bx-reflect-vertical'></i></button>
+            <button id="vertical"><i class='bx bx-reflect-horizontal'></i></button>
+          </div>
+        </div>
+        <div class="crop-section">
+          <label class="title">Crop</label>
+          <button class="crop-button" id="cropBtn" disabled>
+            <i class="fa-solid fa-crop"></i> Crop Image
+          </button>
+          <div class="crop-controls" id="cropControls">
+            <button class="apply-crop" id="applyCrop">Apply Crop</button>
+            <button class="cancel-crop" id="cancelCrop">Cancel</button>
+          </div>
+        </div>
+      </div>
+      <div class="preview-img">
+        <img src="image-placeholder.svg" alt="preview-img" id="previewImg">
+      </div>
+    </div>
+    <div class="controls">
+      <button class="reset-filter">Reset Filters</button>
+      <div class="row">
+        <input type="file" class="file-input" accept="image/*" hidden>
+        <button class="choose-img">Choose Image</button>
+        <button class="save-img">Save Image</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cropper.js JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+  <script src="script.js"></script>
+  
+  <script>
+    // Wait for DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      // Crop functionality using Cropper.js
+      let cropper = null;
+      let isCropping = false;
+      let originalImageSrc = null;
+      
+      const previewImg = document.querySelector("#previewImg");
+      const cropBtn = document.querySelector("#cropBtn");
+      const cropControls = document.querySelector("#cropControls");
+      const applyCropBtn = document.querySelector("#applyCrop");
+      const cancelCropBtn = document.querySelector("#cancelCrop");
+      const container = document.querySelector(".container");
+      
+      console.log('Crop elements found:', {
+        previewImg: !!previewImg,
+        cropBtn: !!cropBtn,
+        cropControls: !!cropControls,
+        applyCropBtn: !!applyCropBtn,
+        cancelCropBtn: !!cancelCropBtn
+      });
+      
+      // Enable crop button when image is loaded
+      function enableCropButton() {
+        if (cropBtn) {
+          cropBtn.disabled = false;
+          console.log('Crop button enabled');
+        }
+      }
+      
+      // Disable crop button
+      function disableCropButton() {
+        if (cropBtn) {
+          cropBtn.disabled = true;
+          console.log('Crop button disabled');
+        }
+      }
+      
+      // Initialize cropping mode
+      function initCropping() {
+        console.log('Init cropping called');
+        
+        if (!previewImg || !previewImg.src || previewImg.src.includes('image-placeholder.svg')) {
+          alert('Please choose an image first!');
+          return;
+        }
+        
+        console.log('Starting crop mode');
+        isCropping = true;
+        originalImageSrc = previewImg.src;
+        
+        // Hide other controls and show crop controls
+        if (cropBtn) cropBtn.style.display = 'none';
+        if (cropControls) cropControls.classList.add('active');
+        
+        // Initialize Cropper.js
+        cropper = new Cropper(previewImg, {
+          aspectRatio: NaN, // Free aspect ratio
+          viewMode: 1,
+          autoCropArea: 0.8,
+          responsive: true,
+          checkOrientation: false,
+          cropBoxMovable: true,
+          cropBoxResizable: true,
+          toggleDragModeOnDblclick: false,
+          minCropBoxWidth: 50,
+          minCropBoxHeight: 50,
+          ready: function() {
+            console.log('Cropper is ready');
+          }
+        });
+      }
+      
+      // Apply crop
+      function applyCrop() {
+        console.log('Apply crop called');
+        if (!cropper) return;
+        
+        // Get cropped canvas
+        const canvas = cropper.getCroppedCanvas({
+          maxWidth: 1920,
+          maxHeight: 1080,
+          imageSmoothingEnabled: true,
+          imageSmoothingQuality: 'high',
+        });
+        
+        // Convert to blob and update image
+        canvas.toBlob((blob) => {
+          const url = URL.createObjectURL(blob);
+          
+          // Destroy cropper
+          cropper.destroy();
+          cropper = null;
+          
+          // Update image source
+          previewImg.src = url;
+          
+          // Reset UI
+          resetCropUI();
+          resetControlStates();
+          
+          // Clean up old blob URL if it exists
+          if (originalImageSrc && originalImageSrc.startsWith('blob:')) {
+            URL.revokeObjectURL(originalImageSrc);
+          }
+          
+          isCropping = false;
+          console.log('Crop applied successfully');
+        }, 'image/jpeg', 0.9);
+      }
+      
+      // Cancel crop
+      function cancelCrop() {
+        console.log('Cancel crop called');
+        if (cropper) {
+          cropper.destroy();
+          cropper = null;
+        }
+        
+        // Restore original image if needed
+        if (originalImageSrc) {
+          previewImg.src = originalImageSrc;
+        }
+        
+        resetCropUI();
+        resetControlStates();
+        isCropping = false;
+      }
+      
+      // Reset crop UI
+      function resetCropUI() {
+        if (cropBtn) cropBtn.style.display = 'block';
+        if (cropControls) cropControls.classList.remove('active');
+      }
+      
+      // Reset control states
+      function resetControlStates() {
+        const existingFilterButtons = document.querySelectorAll('.filter .options button');
+        const existingRotateButtons = document.querySelectorAll('.rotate .options button');
+        
+        [...existingFilterButtons, ...existingRotateButtons].forEach(btn => {
+          btn.disabled = false;
+          btn.style.opacity = '1';
+          btn.style.pointerEvents = 'auto';
+        });
+      }
+      
+      // Disable filter and rotate controls during cropping
+      function toggleControlsState(disabled) {
+        const existingFilterButtons = document.querySelectorAll('.filter .options button');
+        const existingRotateButtons = document.querySelectorAll('.rotate .options button');
+        
+        [...existingFilterButtons, ...existingRotateButtons].forEach(btn => {
+          btn.disabled = disabled;
+          btn.style.opacity = disabled ? '0.5' : '1';
+          btn.style.pointerEvents = disabled ? 'none' : 'auto';
+        });
+      }
+      
+      // Event listeners
+      if (cropBtn) {
+        cropBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          console.log('Crop button clicked');
+          initCropping();
+          toggleControlsState(true);
+        });
+      }
+      
+      if (applyCropBtn) {
+        applyCropBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          applyCrop();
+        });
+      }
+      
+      if (cancelCropBtn) {
+        cancelCropBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          cancelCrop();
+        });
+      }
+      
+      // Monitor image changes to enable/disable crop button
+      if (previewImg) {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
+              const src = previewImg.src;
+              if (src && !src.includes('image-placeholder.svg')) {
+                enableCropButton();
+              } else {
+                disableCropButton();
+              }
+            }
+          });
+        });
+        
+        observer.observe(previewImg, {
+          attributes: true,
+          attributeFilter: ['src']
+        });
+        
+        // Handle image load
+        previewImg.addEventListener('load', () => {
+          if (!previewImg.src.includes('image-placeholder.svg')) {
+            enableCropButton();
+            // Remove the disable class from container when image is loaded
+            if (container) container.classList.remove('disable');
+          }
+        });
+      }
+      
+      // Keyboard shortcuts for crop functionality
+      document.addEventListener('keydown', (e) => {
+        if (isCropping) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            applyCrop();
+          } else if (e.key === 'Escape') {
+            e.preventDefault();
+            cancelCrop();
+          }
+        }
+      });
+      
+      // Clean up blob URLs on page unload
+      window.addEventListener('beforeunload', () => {
+        if (originalImageSrc && originalImageSrc.startsWith('blob:')) {
+          URL.revokeObjectURL(originalImageSrc);
+        }
+      });
+      
+      // Initial check for existing image
+      if (previewImg && previewImg.src && !previewImg.src.includes('image-placeholder.svg')) {
+        enableCropButton();
+      }
+    });
+  </script>
+
+</body>
+
+</html>
