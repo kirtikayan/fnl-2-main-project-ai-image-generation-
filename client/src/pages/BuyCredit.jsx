@@ -67,7 +67,7 @@ const BuyCredit = () => {
         background: 'radial-gradient(circle at center, #f8e1ff 0%, #ffffff 60%)',
       }}></div> 
       
-      <div className="relative z-10">
+      <div className="relative z-10 mt-40">
         <button className="border border-gray-400 px-10 py-2 rounded-full mb-6 text-blue-900">Our Subscription</button>
         <h1 className="text-7xl font-bold mb-6 sm:mb-10 text-black">Choose the Subscription</h1>
 

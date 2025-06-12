@@ -130,6 +130,7 @@ const Header = () => {
                   index % 2 === 0
                     ? assets.sample_img_2
                     : assets.sample_img_1
+                    
                 }
                 alt={`AI Art ${index}`}
                 className="w-full h-full object-cover"
